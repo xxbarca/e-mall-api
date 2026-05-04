@@ -4,6 +4,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { AppValidationPipe } from '@/modules/Core/pipes';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -19,6 +20,16 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Accept, Authorization',
     preflightContinue: false,
   });
+  app.useGlobalPipes(
+    new AppValidationPipe({
+      whitelist: false, // 自动过滤掉没有装饰器的属性
+      forbidNonWhitelisted: false, // 抛出错误如果有非白名单属性
+      transform: true, // 自动类型转换
+      transformOptions: {
+        enableImplicitConversion: true, // 启用隐式转换
+      },
+    }),
+  );
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
