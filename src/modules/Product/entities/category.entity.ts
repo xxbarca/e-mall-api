@@ -5,6 +5,12 @@ import { OnlineStatus } from '@/modules/Product/constants';
 @Entity('category')
 export class CategoryEntity extends _BaseEntity {
   @Column({
+    nullable: true,
+    comment: '父分类ID',
+  })
+  parent_id: string;
+
+  @Column({
     comment: '图片',
     nullable: true,
   })
