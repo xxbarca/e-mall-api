@@ -5,6 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { AppValidationPipe } from '@/modules/Core/pipes';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -30,6 +31,9 @@ async function bootstrap() {
       },
     }),
   );
+  useContainer(app.select(AppModule), {
+    fallbackOnErrors: true,
+  });
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

@@ -10,6 +10,8 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { OnlineStatus } from '@/modules/Product/constants';
+import { CategoryEntity } from '@/modules/Product/entities';
+import { IsDataExist } from '@/modules/Database/constraints';
 
 class BaseCategoryDto extends BaseDto {
   @IsNotEmpty({
@@ -20,6 +22,7 @@ class BaseCategoryDto extends BaseDto {
   name: string;
 
   @ValidateIf((o) => !!o.parent_id, { always: true })
+  @IsDataExist(CategoryEntity, { message: '分类不存在', always: true })
   @IsUUID('all', {
     message: 'parent_id 必须是有效的 UUID',
     groups: [ValidatorGroup.CREATE, ValidatorGroup.UPDATE],
