@@ -1,7 +1,7 @@
 import { BaseRepository } from '@/modules/Database/base';
 import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 import { QueryHook } from '@/modules/Database/helpers';
-import { NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 
 export class BaseService<E extends ObjectLiteral, R extends BaseRepository<E>> {
   /**
@@ -25,6 +25,14 @@ export class BaseService<E extends ObjectLiteral, R extends BaseRepository<E>> {
   ) {
     qb.where(`${this.repository.qbName}.id = :id`, { id });
     return callback ? callback(qb) : qb;
+  }
+
+  async update(id: string, other: Record<string, any>) {
+    try {
+      return await this.repository.update(id, other);
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async detail(id: string, callback?: QueryHook<E>): Promise<E> {

@@ -1,6 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Patch, Post } from '@nestjs/common';
 import { CategoryService } from '@/modules/Product/services';
-import { CreateCategoryDto } from '@/modules/Product/dtos';
+import { CreateCategoryDto, UpdateCategoryDto } from '@/modules/Product/dtos';
 
 @Controller('category')
 export class CategoryController {
@@ -9,5 +9,10 @@ export class CategoryController {
   @Post()
   public async create(@Body() data: CreateCategoryDto) {
     return await this.service.create(data);
+  }
+
+  @Patch()
+  public async update(@Body() data: UpdateCategoryDto) {
+    return await this.service._update(data);
   }
 }
