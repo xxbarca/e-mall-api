@@ -11,13 +11,14 @@ import {
 } from 'class-validator';
 import { OnlineStatus } from '@/modules/Product/constants';
 import { CategoryEntity } from '@/modules/Product/entities';
-import { IsDataExist } from '@/modules/Database/constraints';
+import { IsDataExist, IsDataUnique } from '@/modules/Database/constraints';
 
 class BaseCategoryDto extends BaseDto {
   @IsNotEmpty({
     message: '分类名称不能为空',
     groups: [ValidatorGroup.CREATE],
   })
+  @IsDataUnique(CategoryEntity, { message: '分类名称已存在', always: true })
   @IsOptional({ groups: [ValidatorGroup.PAGE, ValidatorGroup.UPDATE] })
   name: string;
 
@@ -35,6 +36,9 @@ class BaseCategoryDto extends BaseDto {
     groups: [ValidatorGroup.CREATE, ValidatorGroup.UPDATE],
   })
   online: OnlineStatus;
+
+  @IsOptional({ always: true })
+  description: string;
 }
 
 @DtoValidation({ groups: [ValidatorGroup.CREATE] })
